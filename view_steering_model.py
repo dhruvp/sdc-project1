@@ -7,13 +7,14 @@ import json
 from keras.models import model_from_json
 import csv
 from scipy import misc
+import time
 
 pygame.init()
-size = (320*2, 80*2)
+size = (320*2, 160*2)
 pygame.display.set_caption("comma.ai data viewer")
 screen = pygame.display.set_mode(size, pygame.DOUBLEBUF)
 
-camera_surface = pygame.surface.Surface((320,80),0,24).convert()
+camera_surface = pygame.surface.Surface((320,160),0,24).convert()
 
 # ***** get perspective transform for images *****
 from skimage import transform as tf
@@ -109,12 +110,13 @@ if __name__ == "__main__":
       img_left_filename = row[1]
       img_right_filename = row[2]
 
-      img = (misc.imread('./' + img_center_filename))[80:, :, :]
+      img = (misc.imread('./' + img_center_filename))
+      img_for_pred = img[80:, :, :]
       img_left = (misc.imread('./' + img_left_filename))[:, :, :]
       img_right = (misc.imread('./' + img_right_filename))[:, :, :]
       angle_steers = float(row[3]) * 10
-      speed_ms = float(row[4])
-      predicted_steers = model.predict(img[None, :, :, :])[0][0] * 10
+      speed_ms = float(row[5])
+      predicted_steers = model.predict(img_for_pred[None, :, :, :])[0][0] * 10
 
 
       draw_path_on(img, speed_ms, -angle_steers/10.0)
@@ -125,3 +127,4 @@ if __name__ == "__main__":
       camera_surface_2x = pygame.transform.scale2x(camera_surface)
       screen.blit(camera_surface_2x, (0,0))
       pygame.display.flip()
+      time.sleep(.1)
