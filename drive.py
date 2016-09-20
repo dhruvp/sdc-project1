@@ -35,8 +35,9 @@ def telemetry(sid, data):
     # transformed_image_array -= np.mean(transformed_image_array, axis=3, keepdims=True)
     # transformed_image_array /= np.std(transformed_image_array, axis=3, keepdims=True) + 1e-7
     steering_angle = float(model.predict(transformed_image_array, batch_size=1))
-    print steering_angle
-    send_control(steering_angle, 0.1)
+    throttle = 1/(1 + abs(steering_angle)) * 0.2
+    print steering_angle, throttle
+    send_control(steering_angle, throttle)
 
 
 @sio.on('connect')
