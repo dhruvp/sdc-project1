@@ -80,11 +80,12 @@ if __name__ == "__main__":
             steering_angle = float(row[3])
 
             num_samples = 1
-            left_steering_angle = steering_angle
-            right_steering_angle = steering_angle
 
-            if (steering_angle > 0):
-                num_samples = 10
+            # left_steering_angle = steering_angle
+            # right_steering_angle = steering_angle
+
+            left_steering_angle = - 0.3 * steering_angle if steering_angle < 0 else steering_angle
+            right_steering_angle = - 0.3 * steering_angle if steering_angle > 0 else steering_angle
 
             for i in range(num_samples):
                 X.append(img_center)
@@ -119,31 +120,3 @@ if __name__ == "__main__":
     model.save_weights('first_try.keras')
     with open('./first_try.json', 'w') as outfile:
         json.dump(model.to_json(), outfile)
-
-    # model.fit_generator(
-    #   train_generator,
-    #   samples_per_epoch=2000,
-    #   nb_epoch=50,
-    #   validation_data=validation_generator,
-    #   nb_val_samples=800
-    # )
-
-    # model.save_weights('first_try.keras')
-
-    # model.fit(x_train, y_train, validation_data=(x_val, y_val))
-
-    # model.fit_generator(
-    #     gen(20, args.host, port=args.port),
-    #     samples_per_epoch=10000,
-    #     nb_epoch=args.epoch,
-    #     validation_data=gen(20, args.host, port=args.val_port),
-    #     nb_val_samples=1000
-    # )
-    # print("Saving model weights and configuration file.")
-
-    # if not os.path.exists("./outputs/steering_model"):
-    #         os.makedirs("./outputs/steering_model")
-
-    # model.save_weights("./outputs/steering_model/steering_angle.keras", True)
-    # with open('./outputs/steering_model/steering_angle.json', 'w') as outfile:
-    #     json.dump(model.to_json(), outfile)
